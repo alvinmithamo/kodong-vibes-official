@@ -1,42 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Kodong Klan Design System - Kenyan Soul & R&B Collective */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Core Brand Colors - Inspired by Kenyan Culture */
+    --background: 25 10% 97%;
+    --foreground: 20 10% 8%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 30 15% 98%;
+    --card-foreground: 20 10% 8%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 30 15% 98%;
+    --popover-foreground: 20 10% 8%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary - Rich Gold (Kenyan Sunset) */
+    --primary: 43 74% 49%;
+    --primary-foreground: 25 10% 97%;
+    --primary-glow: 45 82% 65%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary - Deep Forest Green */
+    --secondary: 140 45% 25%;
+    --secondary-foreground: 25 10% 97%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Accent - Warm Terracotta */
+    --accent: 352 47% 58%;
+    --accent-foreground: 25 10% 97%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Earth Tones */
+    --earth-warm: 25 45% 70%;
+    --earth-deep: 20 30% 25%;
+    --earth-light: 35 25% 85%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --muted: 35 15% 92%;
+    --muted-foreground: 20 15% 45%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 25 10% 97%;
 
-    --radius: 0.5rem;
+    --border: 35 20% 88%;
+    --input: 35 20% 88%;
+    --ring: 43 74% 49%;
+
+    --radius: 0.75rem;
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 50%, hsl(var(--secondary)) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--muted)) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-glow)) 100%);
+
+    /* Shadows */
+    --shadow-soft: 0 2px 20px -2px hsl(var(--primary) / 0.1);
+    --shadow-glow: 0 0 30px hsl(var(--primary) / 0.2);
+    --shadow-deep: 0 10px 40px -10px hsl(var(--earth-deep) / 0.3);
+
+    /* Animation */
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --sidebar-background: 0 0% 98%;
 
@@ -56,33 +80,45 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Dark Mode - Deep Kenyan Night */
+    --background: 20 25% 8%;
+    --foreground: 25 10% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 20 20% 12%;
+    --card-foreground: 25 10% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 20 20% 12%;
+    --popover-foreground: 25 10% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 43 74% 55%;
+    --primary-foreground: 20 25% 8%;
+    --primary-glow: 45 82% 70%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 140 35% 35%;
+    --secondary-foreground: 25 10% 95%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 352 47% 65%;
+    --accent-foreground: 20 25% 8%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --earth-warm: 25 35% 60%;
+    --earth-deep: 20 40% 15%;
+    --earth-light: 35 15% 75%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --muted: 20 15% 18%;
+    --muted-foreground: 25 10% 65%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --destructive: 0 75% 65%;
+    --destructive-foreground: 20 25% 8%;
+
+    --border: 20 20% 25%;
+    --input: 20 20% 25%;
+    --ring: 43 74% 55%;
+
+    /* Dark Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 50%, hsl(var(--secondary)) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--earth-deep)) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-glow)) 100%);
+
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -100,6 +136,108 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-body;
+    scroll-behavior: smooth;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+}
+
+@layer components {
+  /* Hero Section */
+  .hero-gradient {
+    background: var(--gradient-hero);
+    background-attachment: fixed;
+  }
+
+  .card-gradient {
+    background: var(--gradient-card);
+  }
+
+  .gold-gradient {
+    background: var(--gradient-gold);
+  }
+
+  /* Member Cards */
+  .member-card {
+    @apply relative overflow-hidden rounded-xl shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2;
+    background: var(--gradient-card);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .member-card:hover {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .member-card-overlay {
+    @apply absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-300;
+  }
+
+  .member-card:hover .member-card-overlay {
+    @apply opacity-100;
+  }
+
+  /* Music Player */
+  .music-player {
+    @apply relative overflow-hidden rounded-2xl backdrop-blur-md;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: var(--shadow-deep);
+  }
+
+  /* Gallery */
+  .gallery-item {
+    @apply relative overflow-hidden rounded-lg cursor-pointer transition-transform duration-300 hover:scale-105;
+  }
+
+  .gallery-overlay {
+    @apply absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-300 flex items-center justify-center;
+  }
+
+  .gallery-item:hover .gallery-overlay {
+    @apply opacity-100;
+  }
+
+  /* Smooth scrolling animations */
+  .fade-in-up {
+    @apply opacity-0 translate-y-8 transition-all duration-700 ease-out;
+  }
+
+  .fade-in-up.animate {
+    @apply opacity-100 translate-y-0;
+  }
+
+  .parallax {
+    transform: translate3d(0, var(--scroll-offset, 0), 0);
+  }
+
+  /* Custom button styles */
+  .btn-hero {
+    @apply px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300;
+    background: var(--gradient-gold);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .btn-hero:hover {
+    @apply scale-105;
+    box-shadow: var(--shadow-deep);
+  }
+
+  .btn-outline-gold {
+    @apply px-6 py-3 border-2 border-primary text-primary rounded-full font-medium transition-all duration-300 hover:bg-primary hover:text-primary-foreground;
+  }
+
+  /* Navigation */
+  .nav-blur {
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .dark .nav-blur {
+    background: rgba(0, 0, 0, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 }
