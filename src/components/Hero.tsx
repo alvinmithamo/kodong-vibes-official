@@ -1,5 +1,7 @@
 import { Play, Music, Calendar } from "lucide-react";
 import heroImage from "@/assets/hero-kodong-klan.jpg";
+import kodong12 from "@/assets/kodong photos/kodong 12.jpg";
+
 
 const Hero = () => {
   const scrollToSection = (href: string) => {
@@ -14,7 +16,7 @@ const Hero = () => {
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <img
-          src={heroImage}
+          src={kodong12}
           alt="Kodong Klan performing on stage"
           className="w-full h-full object-cover"
         />
@@ -23,8 +25,11 @@ const Hero = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 text-center px-4 max-w-6xl mx-auto">
+    
+      <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
         <div className="animate-fade-in-up">
+           
+      <br></br>
           <h1 className="font-display font-bold text-5xl md:text-7xl lg:text-8xl text-white mb-6 leading-tight">
             Kodong
             <span className="block text-transparent bg-clip-text gold-gradient">

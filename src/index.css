@@ -19,9 +19,9 @@
     --popover-foreground: 20 10% 8%;
 
     /* Primary - Rich Gold (Kenyan Sunset) */
-    --primary: 43 74% 49%;
+    --primary: 0 97% 34%;
     --primary-foreground: 25 10% 97%;
-    --primary-glow: 45 82% 65%;
+    --primary-glow: 0 97% 40%;
 
     /* Secondary - Deep Forest Green */
     --secondary: 140 45% 25%;
@@ -90,9 +90,9 @@
     --popover: 20 20% 12%;
     --popover-foreground: 25 10% 95%;
 
-    --primary: 43 74% 55%;
+    --primary: 0 97% 40%;
     --primary-foreground: 20 25% 8%;
-    --primary-glow: 45 82% 70%;
+    --primary-glow: 0 97% 45%;
 
     --secondary: 140 35% 35%;
     --secondary-foreground: 25 10% 95%;
