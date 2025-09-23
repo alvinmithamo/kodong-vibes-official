@@ -1,5 +1,14 @@
 import { useState } from "react";  
 import { Music, Heart, Star } from "lucide-react";  
+import kodong6 from "@/assets/kodong photos/kodong 6.jpg";
+import kodong7 from "@/assets/kodong photos/kodong 7.jpg";
+import kodong5 from "@/assets/kodong photos/kodong 5.jpg";
+import kodong15 from "@/assets/kodong photos/kodong 15.jpg";
+import kodong9 from "@/assets/kodong photos/kodong 9.jpg";
+import kodong16 from "@/assets/kodong photos/kodong 16.jpg";
+import kodong17 from "@/assets/kodong photos/kodong 17.webp";
+import kodong14 from "@/assets/kodong photos/kodong 14.jpg";
+import kodong18 from "@/assets/kodong photos/kodong 18.jpg";
   
 const About = () => {  
   const [hoveredMember, setHoveredMember] = useState<number | null>(null);  
@@ -10,49 +19,56 @@ const About = () => {
       role: "Lead Vocalist",  
       bio: "The soulful voice that defines Kodong Klan's signature sound.",  
       specialty: "R&B, Soul",  
-      fact: "Started singing in church choirs at age 8"  
+      fact: "Started singing in church choirs at age 8",  
+      image: kodong6,
     },  
     {  
       name: "Bensoul",  
       role: "Songwriter & Vocalist",  
       bio: "Master storyteller weaving life experiences into melodies.",  
       specialty: "Afro-fusion",  
-      fact: "Has written over 50 songs for the group"  
+      fact: "Has written over 50 songs for the group" ,
+      image: kodong18
     },  
     {  
       name: "Mordecai Dex",  
       role: "Producer & Multi-instrumentalist",  
       bio: "The musical genius behind Kodong Klan's innovative sound.",  
       specialty: "Production, Keys",  
-      fact: "Can play 7 different instruments"  
+      fact: "Can play 7 different instruments" ,
+      image: kodong17, 
     },  
     {  
       name: "Charisma",  
       role: "Vocalist & Performer",  
       bio: "Brings magnetic energy and stage presence to every performance.",  
       specialty: "Performance, Dance",  
-      fact: "Trained dancer with 10+ years experience"  
+      fact: "Trained dancer with 10+ years experience",
+      image: kodong7,  
     },  
     {  
       name: "Ywaya Tajiri",  
       role: "Rapper & Lyricist",  
       bio: "The wordsmith delivering powerful verses and cultural narratives.",  
       specialty: "Hip-hop, Spoken Word",  
-      fact: "Speaks 4 languages fluently"  
+      fact: "Speaks 4 languages fluently" ,
+      image: kodong5, 
     },  
     {  
       name: "Coster Ojwang",  
       role: "Bassist & Backing Vocals",  
       bio: "The rhythmic foundation that grounds every Kodong Klan track.",  
       specialty: "Bass, Harmony",  
-      fact: "Self-taught musician since age 12"  
+      fact: "Self-taught musician since age 12",
+      image: kodong16,  
     },  
     {  
       name: "Israel Onyach",  
       role: "Drummer & Percussionist",  
       bio: "The heartbeat of the group, driving every song with passion.",  
       specialty: "Drums, African Percussion",  
-      fact: "Studied traditional Kenyan rhythms"  
+      fact: "Studied traditional Kenyan rhythms",
+      image: kodong9,  
     }  
   ];  
   
@@ -60,7 +76,12 @@ const About = () => {
     <div className="min-h-screen py-20 bg-gradient-to-b from-background to-muted">  
       <div className="container mx-auto px-4">  
         {/* Section Header */}  
-        <div className="text-center mb-16 animate-fade-in-up">  
+        <div className="text-center mb-16 animate-fade-in-up"> 
+             <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br> 
           <h2 className="font-display font-bold text-4xl md:text-6xl text-foreground mb-6">  
             Meet the  
             <span className="text-transparent bg-clip-text gold-gradient"> Collective</span>  
@@ -84,7 +105,11 @@ const About = () => {
               {/* Member Image Placeholder */}  
               <div className="w-full h-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center relative">  
                 <div className="text-6xl text-primary/40">  
-                  <Music />  
+                 <img
+                    src={member.image}
+                    alt={member.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                    />
                 </div>  
                   
                 {/* Member Info Overlay */}  
@@ -136,8 +161,12 @@ const About = () => {
             </div>  
               
             <div className="text-center">  
-              <div className="inline-flex items-center justify-center w-32 h-32 rounded-full gold-gradient mb-6 animate-glow-pulse">  
-                <Heart className="w-16 h-16 text-primary-foreground" />  
+              <div className="inline-flex items-center justify-center w-80 h-80 rounded-full gold-gradient mb-6 animate-glow-pulse">  
+               <img
+                    src={kodong14}
+                    alt="Kodong"
+                    className="w-full h-full object-cover rounded-full"
+                    />  
               </div>  
               <h4 className="font-display font-bold text-xl text-foreground mb-2">  
                 United by Music  

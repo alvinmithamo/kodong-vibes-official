@@ -7,7 +7,7 @@ import kodong7 from "@/assets/kodong photos/kodong 7.jpg";
 import kodong9 from "@/assets/kodong photos/kodong 9.jpg";
 import kodong15 from "@/assets/kodong photos/kodong 15.jpg";
 import kodong16 from "@/assets/kodong photos/kodong 16.jpg";
-import kodong17 from "@/assets/kodong photos/kodong 17.jpg";
+import kodong17 from "@/assets/kodong photos/kodong 17.webp";
 import { useNavigate } from "react-router-dom";  
 
   
@@ -71,17 +71,17 @@ const Home = () => {
   // Featured band members  
   const featuredMembers = [  
     {  
-      name: "Okello Max",  
+      name: "Coster Ojwang",  
       role: "Lead Vocalist",  
       specialty: "R&B, Soul"  
     },  
     {  
-      name: "Bensoul",   
+      name: "Israel Onyach",   
       role: "Songwriter & Vocalist",  
       specialty: "Afro-fusion"  
     },  
     {  
-      name: "Mordecai Dex",  
+      name: "Okello Max",  
       role: "Producer & Multi-instrumentalist",   
       specialty: "Production, Keys"  
     }  
@@ -363,12 +363,12 @@ const Home = () => {
                 <div className="w-20 h-20 mx-auto rounded-full gold-gradient flex items-center justify-center mb-4">  
                     <img
                     src={[
-                      kodong5,
+                      kodong16,
+                      kodong9,
                       kodong6,
                       kodong7,
-                      kodong9,
                       kodong15,
-                      kodong16,
+                      kodong5,
                       kodong17
                     ][Math.floor(Math.random() * 7)]}
                     alt={member.name}
