@@ -118,6 +118,18 @@ app.post('/api/mpesa/stkquery', async (req, res) => {
   }
 });
 
+// M-PESA asynchronous callback receiver (set this URL in your Daraja app)
+app.post('/api/mpesa/callback', (req, res) => {
+  try {
+    // Safaricom posts the result here
+    console.log('M-PESA Callback:', JSON.stringify(req.body));
+    // Always respond 200 to acknowledge receipt
+    res.json({ received: true });
+  } catch (e) {
+    res.json({ received: true });
+  }
+});
+
 // Simple health
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
 
