@@ -1,5 +1,7 @@
 import { ShoppingCart, Star, Heart, Package, Truck, Shield } from "lucide-react";  
 import { useState } from "react";  
+import { useCart, formatKsh } from "@/context/CartContext";
+import { toast } from "@/components/ui/sonner";
   
 const Merch = () => {  
   const [selectedCategory, setSelectedCategory] = useState("All");  
@@ -127,6 +129,18 @@ const Merch = () => {
   
   const featuredItems = merchItems.filter(item => item.featured);  
   
+  const { addItem } = useCart();
+
+  const parseKsh = (display: string): number => {
+    // convert strings like "KSh 2,500" to number 2500
+    return Number(display.replace(/[^0-9]/g, ""));
+  };
+
+  const handleAddToCart = (item: any) => {
+    addItem({ id: item.id, name: item.name, priceKsh: parseKsh(item.price), category: item.category }, 1);
+    toast.success(`${item.name} added to cart`, { description: formatKsh(parseKsh(item.price)) });
+  };
+
   const renderStars = (rating: number) => {  
     return [...Array(5)].map((_, i) => (  
       <Star   
@@ -244,7 +258,8 @@ const Merch = () => {
                       ? 'btn-hero'   
                       : 'bg-muted text-muted-foreground cursor-not-allowed'  
                   }`}  
-                  disabled={!item.inStock}  
+                  disabled={!item.inStock}
+                  onClick={() => item.inStock && handleAddToCart(item)}  
                 >  
                   <ShoppingCart className="w-4 h-4" />  
                   {item.inStock ? 'Add to Cart' : 'Sold Out'}  
@@ -322,9 +337,13 @@ const Merch = () => {
                       </span>  
                     )}  
                   </div>  
-                  <button className="btn-outline-gold text-sm px-4 py-2">  
-                    View Details  
-                  </button>  
+                  <button
+                    className={`btn-outline-gold text-sm px-4 py-2 ${item.inStock ? '' : 'opacity-50 cursor-not-allowed'}`}
+                    disabled={!item.inStock}
+                    onClick={() => item.inStock && handleAddToCart(item)}
+                  >
+                    Add to Cart
+                  </button>
                 </div>  
               </div>  
             ))}  

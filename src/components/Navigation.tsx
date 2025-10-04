@@ -1,11 +1,15 @@
-import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Menu, ShoppingCart, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import CartDrawer from "@/components/CartDrawer";
+import { useCart } from "@/context/CartContext";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
   const location = useLocation();
+  const { cartCount } = useCart();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -73,14 +77,38 @@ const Navigation = () => {
                 }`}></span>  
               </Link>  
             ))}  
+            <button
+              onClick={() => setCartOpen(true)}
+              className="relative inline-flex items-center justify-center rounded-md px-3 py-2 hover:bg-accent transition-colors"
+              aria-label="Open cart"
+            >
+              <ShoppingCart size={20} />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground text-[10px] h-5 min-w-5 px-1 font-semibold">
+                  {cartCount}
+                </span>
+              )}
+            </button>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu + Cart Buttons */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden p-2 text-foreground hover:text-primary transition-colors"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+          <button
+            onClick={() => setCartOpen(true)}
+            className="md:hidden p-2 text-foreground hover:text-primary transition-colors relative"
+            aria-label="Open cart"
+          >
+            <ShoppingCart size={22} />
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground text-[10px] h-5 min-w-5 px-1 font-semibold">
+                {cartCount}
+              </span>
+            )}
           </button>
         </div>
 
@@ -106,6 +134,7 @@ const Navigation = () => {
           </div>  
         )}  
       </div>  
+      <CartDrawer open={cartOpen} onOpenChange={setCartOpen} />
     </nav>  
   );  
 };  
