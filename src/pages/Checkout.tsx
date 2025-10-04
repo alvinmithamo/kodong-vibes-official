@@ -24,20 +24,81 @@ const Checkout: React.FC = () => {
   const { state, cartTotalKsh, clearCart } = useCart();
   const form = useForm<FormValues>({ resolver: zodResolver(schema), defaultValues: { fullName: "", email: "", phone: "", address: "", city: "" } });
 
-  const onSubmit = (data: FormValues) => {
-    // Simulate payment/checkout success
-    toast.success("Payment successful", { description: `Order total ${formatKsh(cartTotalKsh)}` });
-    const orderId = Math.random().toString(36).slice(2, 10).toUpperCase();
-    const summary = {
-      orderId,
-      totalKsh: cartTotalKsh,
-      items: state.items,
-      customer: data,
-    };
-    // Persist a simple order snapshot for success page
-    sessionStorage.setItem("kk_last_order", JSON.stringify(summary));
-    clearCart();
-    navigate("/order-success");
+  const onSubmit = async (data: FormValues) => {
+    try {
+      // Convert phone to 2547XXXXXXXX format if provided as 07XXXXXXXX
+      const normalizePhone = (p: string) => {
+        const digits = p.replace(/\D/g, "");
+        if (digits.startsWith("0")) return `254${digits.slice(1)}`;
+        if (digits.startsWith("254")) return digits;
+        return digits; // assume already normalized
+      };
+
+      const phone = normalizePhone(data.phone);
+      const amount = cartTotalKsh;
+      toast("Initiating M-PESA STK push...");
+
+      const startRes = await fetch("/api/mpesa/stkpush", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, amount, accountReference: "KKMerch", transactionDesc: "Merch Purchase" }),
+      });
+      const startData = await startRes.json();
+      if (!startRes.ok) {
+        throw new Error(startData?.errorMessage || startData?.error || "Failed to start STK push");
+      }
+
+      const checkoutId: string | undefined = startData.CheckoutRequestID;
+      if (!checkoutId) throw new Error("No CheckoutRequestID returned");
+
+      // Poll status for up to ~90 seconds
+      const startedAt = Date.now();
+      const deadlineMs = 90_000;
+      let resultCode: string | undefined;
+      let receipt: string | undefined;
+
+      while (Date.now() - startedAt < deadlineMs) {
+        await new Promise((r) => setTimeout(r, 5000));
+        const qRes = await fetch("/api/mpesa/stkquery", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ CheckoutRequestID: checkoutId }),
+        });
+        const qData = await qRes.json();
+        if (!qRes.ok) throw new Error(qData?.errorMessage || qData?.error || "Query failed");
+
+        resultCode = qData?.ResultCode ?? qData?.resultCode;
+        // 0 means success
+        if (resultCode === "0" || resultCode === 0) {
+          // Safaricom does not return receipt here; it's in callback. We'll proceed as paid.
+          break;
+        }
+
+        // For common failures, stop early
+        if (["1032", 1032, "2001", 2001, "1", 1].includes(resultCode as any)) {
+          throw new Error("Payment not completed. Please try again.");
+        }
+      }
+
+      if (!(resultCode === "0" || resultCode === 0)) {
+        throw new Error("Payment timeout or not completed.");
+      }
+
+      toast.success("Payment successful", { description: `Order total ${formatKsh(cartTotalKsh)}` });
+      const orderId = Math.random().toString(36).slice(2, 10).toUpperCase();
+      const summary = {
+        orderId,
+        totalKsh: cartTotalKsh,
+        items: state.items,
+        customer: data,
+        receipt,
+      };
+      sessionStorage.setItem("kk_last_order", JSON.stringify(summary));
+      clearCart();
+      navigate("/order-success");
+    } catch (e: any) {
+      toast.error("Payment failed", { description: e.message || String(e) });
+    }
   };
 
   if (state.items.length === 0) {
