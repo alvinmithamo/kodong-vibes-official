@@ -19,6 +19,7 @@ const {
   MPESA_SHORTCODE, // Till/Paybill (BusinessShortCode)
   MPESA_ENV = 'sandbox', // 'sandbox' | 'production'
   MPESA_CALLBACK_URL, // public https callback url to receive STK callback
+  MPESA_TRANSACTION_TYPE, // 'CustomerPayBillOnline' or 'CustomerBuyGoodsOnline'
 } = process.env;
 
 const DARAJA_BASE = MPESA_ENV === 'production' ? 'https://api.safaricom.co.ke' : 'https://sandbox.safaricom.co.ke';
@@ -79,7 +80,7 @@ app.post('/api/mpesa/stkpush', async (req, res) => {
       BusinessShortCode: MPESA_SHORTCODE,
       Password: password,
       Timestamp: ts,
-      TransactionType: 'CustomerPayBillOnline', // For paybill and till, STK works with this
+      TransactionType: MPESA_TRANSACTION_TYPE || 'CustomerPayBillOnline',
       Amount: Number(amount),
       PartyA: phone, // customer phone, format 2547XXXXXXXX
       PartyB: MPESA_SHORTCODE,
