@@ -1,4 +1,8 @@
 import { Mail, Phone, MapPin, Instagram, Twitter, Facebook, Youtube } from "lucide-react";  
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "@/components/ui/sonner";
   
 const Contact = () => {  
   const socialLinks = [  
@@ -29,6 +33,37 @@ const Contact = () => {
     }  
   ];  
   
+  const schema = z.object({
+    firstName: z.string().min(1, "First name is required"),
+    lastName: z.string().optional(),
+    email: z.string().email("Enter a valid email"),
+    subject: z.string().min(1, "Subject is required"),
+    message: z.string().min(5, "Please enter a message"),
+  });
+
+  type FormValues = z.infer<typeof schema>;
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: { firstName: "", lastName: "", email: "", subject: "", message: "" },
+  });
+
+  const onSubmit = async (values: FormValues) => {
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Failed to send message");
+      toast.success("Message sent", { description: "We will reply shortly." });
+      form.reset();
+    } catch (e: any) {
+      toast.error("Failed to send", { description: e.message || String(e) });
+    }
+  };
+
   return (  
     <div className="min-h-screen py-20 bg-gradient-to-b from-background to-muted">  
       <div className="container mx-auto px-4">  
@@ -52,7 +87,7 @@ const Contact = () => {
                 Send us a Message  
               </h3>  
                 
-              <form className="space-y-6">  
+              <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>  
                 <div className="grid md:grid-cols-2 gap-4">  
                   <div>  
                     <label className="block text-sm font-medium text-foreground mb-2">  
@@ -62,6 +97,7 @@ const Contact = () => {
                       type="text"  
                       className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"  
                       placeholder="Your first name"  
+                      {...form.register("firstName")}  
                     />  
                   </div>  
                   <div>  
@@ -72,6 +108,7 @@ const Contact = () => {
                       type="text"  
                       className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"  
                       placeholder="Your last name"  
+                      {...form.register("lastName")}  
                     />  
                   </div>  
                 </div>  
@@ -84,6 +121,7 @@ const Contact = () => {
                     type="email"  
                     className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"  
                     placeholder="your.email@example.com"  
+                    {...form.register("email")}  
                   />  
                 </div>  
                   
@@ -91,12 +129,14 @@ const Contact = () => {
                   <label className="block text-sm font-medium text-foreground mb-2">  
                     Subject  
                   </label>  
-                  <select className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors">  
-                    <option>Booking Inquiry</option>  
-                    <option>Collaboration</option>  
-                    <option>Media Request</option>  
-                    <option>Fan Message</option>  
-                    <option>Other</option>  
+                  <select className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"  
+                    {...form.register("subject")}
+                  >  
+                    <option value="Booking Inquiry">Booking Inquiry</option>  
+                    <option value="Collaboration">Collaboration</option>  
+                    <option value="Media Request">Media Request</option>  
+                    <option value="Fan Message">Fan Message</option>  
+                    <option value="Other">Other</option>  
                   </select>  
                 </div>  
                   
@@ -108,10 +148,11 @@ const Contact = () => {
                     rows={5}  
                     className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors resize-none"  
                     placeholder="Tell us about your project, event, or just say hello..."  
+                    {...form.register("message")}  
                   ></textarea>  
                 </div>  
                   
-                <button className="btn-hero w-full">  
+                <button className="btn-hero w-full" type="submit">  
                   Send Message  
                 </button>  
               </form>  

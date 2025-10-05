@@ -4,6 +4,7 @@
 const express = require('express');
 const cors = require('cors');
 const fetch = require('node-fetch');
+const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 const app = express();
@@ -21,6 +22,18 @@ const {
 } = process.env;
 
 const DARAJA_BASE = MPESA_ENV === 'production' ? 'https://api.safaricom.co.ke' : 'https://sandbox.safaricom.co.ke';
+
+// Email config
+const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, CONTACT_TO, CONTACT_FROM } = process.env;
+let mailer;
+if (SMTP_HOST && SMTP_USER && SMTP_PASS) {
+  mailer = nodemailer.createTransport({
+    host: SMTP_HOST,
+    port: Number(SMTP_PORT || 587),
+    secure: Number(SMTP_PORT || 587) === 465,
+    auth: { user: SMTP_USER, pass: SMTP_PASS },
+  });
+}
 
 async function getAccessToken() {
   const auth = Buffer.from(`${MPESA_CONSUMER_KEY}:${MPESA_CONSUMER_SECRET}`).toString('base64');
@@ -127,6 +140,35 @@ app.post('/api/mpesa/callback', (req, res) => {
     res.json({ received: true });
   } catch (e) {
     res.json({ received: true });
+  }
+});
+
+// Contact email endpoint
+app.post('/api/contact', async (req, res) => {
+  try {
+    if (!mailer) return res.status(500).json({ error: 'Email not configured' });
+    const { firstName, lastName, email, subject, message } = req.body || {};
+    if (!firstName || !email || !message) return res.status(400).json({ error: 'Missing required fields' });
+
+    const to = CONTACT_TO || SMTP_USER;
+    const from = CONTACT_FROM || SMTP_USER;
+    const html = `
+      <p><strong>From:</strong> ${firstName} ${lastName || ''} &lt;${email}&gt;</p>
+      <p><strong>Subject:</strong> ${subject || 'Contact Message'}</p>
+      <p><strong>Message:</strong></p>
+      <p>${(message || '').replace(/\n/g, '<br/>')}</p>
+    `;
+
+    const info = await mailer.sendMail({
+      to,
+      from,
+      subject: subject || 'New website contact message',
+      html,
+      replyTo: email,
+    });
+    res.json({ ok: true, id: info.messageId });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
   }
 });
 
