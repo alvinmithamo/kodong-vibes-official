@@ -50,15 +50,45 @@ npm run dev
 - Click on "New codespace" to launch a new Codespace environment.
 - Edit files directly within the Codespace and commit and push your changes once you're done.
 
-## What technologies are used for this project?
+## E‑commerce Liquor Store – Dev Quickstart
 
-This project is built with:
+### Stack
+- React (Vite, TypeScript, Tailwind, shadcn-ui)
+- Node.js/Express API (TypeScript)
+- PostgreSQL (Prisma ORM)
+- Redis (sessions/checkout state/inventory locks)
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Run locally (no Docker)
+1. Start Postgres and Redis locally (or with Docker separately).
+2. Configure server env:
+   - Copy `server/.env.example` to `server/.env` and adjust values.
+3. Install deps and migrate:
+   - `cd server && npm i && npx prisma generate && npx prisma migrate dev && npm run seed`
+4. Start API: `npm run dev` (in `server/`)
+5. Start web: `npm i` (at repo root) then `npm run dev`
+   - The web dev server proxies `/api` to `http://localhost:8080`.
+
+### Run with Docker Compose
+1. Copy `server/.env.example` to `server/.env` and set secrets.
+2. Build and run Postgres/Redis first with your local Docker or use external services.
+3. Build images and run:
+   - `docker compose up -d postgres redis`
+   - Run Prisma migrations locally (needs `docker` available for server build) or run the server locally once to migrate.
+   - `docker compose build server web`
+   - `docker compose up -d server web`
+4. Open web at http://localhost:5173 and API at http://localhost:8080/api/health
+
+### Payments (sandbox)
+- M-Pesa Daraja sandbox credentials required for STK push.
+- Flutterwave public/secret keys for hosted checkout and webhook secret.
+- Webhooks:
+  - M-Pesa: `POST /api/webhooks/mpesa`
+  - Flutterwave: `POST /api/webhooks/flutterwave` with `verif-hash` header.
+
+### Security
+- JWT auth with secure secret in `server/.env` (`JWT_SECRET`).
+- Do not store card data; use Flutterwave hosted page.
+- Validate webhook signatures and enforce idempotency.
 
 ## How can I deploy this project?
 

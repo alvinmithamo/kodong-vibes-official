@@ -7,6 +7,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
+import Shop from "./pages/Shop";
+import ProductPage from "./pages/Product";
+import CartPage from "./pages/Cart";
+import CheckoutPage from "./pages/Checkout";
+import OrderPage from "./pages/Order";
+import LoginPage from "./pages/Login";
+import AdminPage from "./pages/Admin";
 import Music from "./pages/Music";
 import About from "./pages/About";
 import Gallery from "./pages/Gallery";
@@ -28,6 +35,13 @@ const App = () => (
           <main>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/product/:slug" element={<ProductPage />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout/:id" element={<CheckoutPage />} />
+          <Route path="/order/:orderNumber" element={<OrderPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/admin" element={<AdminPage />} />
           <Route path="/about" element={<About />} />
           <Route path="/music" element={<Music />} />
           <Route path="/gallery" element={<Gallery />} />

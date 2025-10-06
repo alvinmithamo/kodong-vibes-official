@@ -1,0 +1,237 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  passwordHash  String
+  name          String
+  phone         String?  @unique
+  role          UserRole @default(CUSTOMER)
+  dateOfBirth   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  addresses     Address[]
+  orders        Order[]
+  carts         Cart[]
+}
+
+enum UserRole {
+  ADMIN
+  CUSTOMER
+  DELIVERY
+}
+
+model Address {
+  id           String   @id @default(uuid())
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String
+  line1        String
+  line2        String?
+  city         String
+  state        String?
+  postalCode   String?
+  country      String
+  deliveryNotes String?
+  isDefault    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Category {
+  id        String    @id @default(uuid())
+  name      String
+  slug      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
+}
+
+model Brand {
+  id        String    @id @default(uuid())
+  name      String
+  slug      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
+}
+
+model Product {
+  id              String    @id @default(uuid())
+  name            String
+  slug            String    @unique
+  description     String?
+  images          Json
+  category        Category  @relation(fields: [categoryId], references: [id])
+  categoryId      String
+  brand           Brand?    @relation(fields: [brandId], references: [id])
+  brandId         String?
+  abv             Float
+  volumeMl        Int
+  priceCents      Int
+  currency        String    @default("KES")
+  isActive        Boolean   @default(true)
+  stock           Int       @default(0)
+  minAge          Int       @default(18)
+  deliveryNote    String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  orderItems      OrderItem[]
+  cartItems       CartItem[]
+}
+
+model PromoCode {
+  id          String        @id @default(uuid())
+  code        String        @unique
+  type        DiscountType
+  value       Int           // percent for PERCENT, amount cents for AMOUNT
+  startsAt    DateTime?
+  endsAt      DateTime?
+  isActive    Boolean       @default(true)
+  usageLimit  Int?
+  usedCount   Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  orders      Order[]
+}
+
+enum DiscountType {
+  PERCENT
+  AMOUNT
+}
+
+model Cart {
+  id         String     @id @default(uuid())
+  user       User?      @relation(fields: [userId], references: [id])
+  userId     String?
+  sessionId  String?    @unique
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  items      CartItem[]
+}
+
+model CartItem {
+  id         String   @id @default(uuid())
+  cart       Cart     @relation(fields: [cartId], references: [id])
+  cartId     String
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  String
+  quantity   Int      @default(1)
+  priceCents Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Order {
+  id               String        @id @default(uuid())
+  orderNumber      String        @unique
+  user             User?         @relation(fields: [userId], references: [id])
+  userId           String?
+  status           OrderStatus   @default(PENDING_PAYMENT)
+  paymentMethod    PaymentMethod
+  subtotalCents    Int
+  discountCents    Int           @default(0)
+  totalCents       Int
+  currency         String        @default("KES")
+  promoCode        PromoCode?    @relation(fields: [promoCodeId], references: [id])
+  promoCodeId      String?
+  deliveryLine1    String
+  deliveryLine2    String?
+  deliveryCity     String
+  deliveryState    String?
+  deliveryPostal   String?
+  deliveryCountry  String
+  deliveryNotes    String?
+  deliverySlot     String?
+  ageVerified      Boolean       @default(false)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  items            OrderItem[]
+  payments         Payment[]
+  statusHistory    OrderStatusHistory[]
+}
+
+enum OrderStatus {
+  PENDING_PAYMENT
+  PAID
+  PROCESSING
+  OUT_FOR_DELIVERY
+  DELIVERED
+  FAILED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  COD
+  MPESA
+  FLUTTERWAVE
+}
+
+model OrderItem {
+  id          String   @id @default(uuid())
+  order       Order    @relation(fields: [orderId], references: [id])
+  orderId     String
+  product     Product  @relation(fields: [productId], references: [id])
+  productId   String
+  productName String
+  brandName   String?
+  priceCents  Int
+  quantity    Int
+}
+
+model Payment {
+  id              String         @id @default(uuid())
+  order           Order          @relation(fields: [orderId], references: [id])
+  orderId         String
+  provider        PaymentMethod
+  status          PaymentStatus  @default(PENDING)
+  reference       String?        @unique
+  amountCents     Int
+  currency        String         @default("KES")
+  rawPayload      Json?
+  idempotencyKey  String?        @unique
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+model WebhookEvent {
+  id           String   @id @default(uuid())
+  provider     String
+  externalId   String   @unique
+  signature    String?
+  rawPayload   Json
+  processedAt  DateTime?
+  createdAt    DateTime @default(now())
+}
+
+model DeliveryAgent {
+  id        String   @id @default(uuid())
+  name      String
+  phone     String   @unique
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderStatusHistory {
+  id        String      @id @default(uuid())
+  order     Order       @relation(fields: [orderId], references: [id])
+  orderId   String
+  status    OrderStatus
+  notes     String?
+  actorId   String?
+  actorRole String?
+  createdAt DateTime    @default(now())
+}
