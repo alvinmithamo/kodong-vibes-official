@@ -59,7 +59,7 @@ const Hero = () => {
               onClick={() => scrollToSection('#events')}
               className="btn-outline-gold flex items-center gap-3"
             >
-              <Calendar className="w-5 h-5" />
+              <Calendar className="w-5 h-5 " />
               Upcoming Shows
             </button>
           </div>
@@ -80,7 +80,7 @@ const Hero = () => {
             </div>
             <div className="animate-scale-in" style={{ animationDelay: '0.6s' }}>
               <div className="text-3xl md:text-4xl font-display font-bold text-primary-glow mb-2">
-                50K+
+              20+
               </div>
               <div className="text-white/80 font-body">Fans</div>
             </div>
