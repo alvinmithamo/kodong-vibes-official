@@ -1,58 +1,80 @@
 import { useState } from "react";
-import { Music, Heart, Star } from "lucide-react";
+import { Music, Heart, Star, Mic, Music2, Disc, Headphones, Drum, Guitar } from "lucide-react";
+import kodong5 from "../assets/kodong photos/kodong 5.jpg"
+import kodong6 from "../assets/kodong photos/kodong 6.jpg"
+import kodong7 from "../assets/kodong photos/kodong 7.jpg"
+import kodong9 from "../assets/kodong photos/kodong 9.jpg"
+import kodong16 from "../assets/kodong photos/kodong 16.jpg"
+import kodong17 from "../assets/kodong photos/kodong 17.webp"
+import kodong18 from "../assets/kodong photos/kodong 18.jpg"
 
 const About = () => {
   const [hoveredMember, setHoveredMember] = useState<number | null>(null);
-
+   const memberIcons = [
+    <Mic key="mic" className="w-8 h-8" />,
+    <Music2 key="music" className="w-8 h-8" />,
+    <Disc key="disc" className="w-8 h-8" />,
+    <Headphones key="headphones" className="w-8 h-8" />,
+    <Drum key="drum" className="w-8 h-8" />,
+    <Guitar key="guitar" className="w-8 h-8" />,
+    <Music key="music2" className="w-8 h-8" />
+  ];
   const members = [
     {
       name: "Okello Max",
       role: "Lead Vocalist",
       bio: "The soulful voice that defines Kodong Klan's signature sound.",
       specialty: "R&B, Soul",
-      fact: "Started singing in church choirs at age 8"
+      fact: "Started singing in church choirs at age 8",
+      photo: kodong6
     },
     {
       name: "Bensoul",
       role: "Songwriter & Vocalist",
       bio: "Master storyteller weaving life experiences into melodies.",
       specialty: "Afro-fusion",
-      fact: "Has written over 50 songs for the group"
+      fact: "Has written over 50 songs for the group",
+      photo: kodong18
     },
     {
       name: "Mordecai Dex",
       role: "Producer & Multi-instrumentalist",
       bio: "The musical genius behind Kodong Klan's innovative sound.",
       specialty: "Production, Keys",
-      fact: "Can play 7 different instruments"
+      fact: "Can play 7 different instruments",
+      photo: kodong16
     },
     {
       name: "Charisma",
       role: "Vocalist & Performer",
-      bio: "Brings magnetic energy and stage presence to every performance.",
-      specialty: "Performance, Dance",
-      fact: "Trained dancer with 10+ years experience"
+      bio: "Brings energy and charisma to every performance.",
+      specialty: "Vocals, Performance",
+      fact: "Has a background in theater and dance",
+      photo: kodong7
     },
     {
       name: "Ywaya Tajiri",
       role: "Rapper & Lyricist",
       bio: "The wordsmith delivering powerful verses and cultural narratives.",
       specialty: "Hip-hop, Spoken Word",
-      fact: "Speaks 4 languages fluently"
+      fact: "Speaks 4 languages fluently",
+      photo: kodong5
     },
     {
       name: "Coster Ojwang",
       role: "Bassist & Backing Vocals",
       bio: "The rhythmic foundation that grounds every Kodong Klan track.",
       specialty: "Bass, Harmony",
-      fact: "Self-taught musician since age 12"
+      fact: "Self-taught musician since age 12",
+      photo: kodong16
     },
     {
       name: "Israel Onyach",
       role: "Drummer & Percussionist",
       bio: "The heartbeat of the group, driving every song with passion.",
       specialty: "Drums, African Percussion",
-      fact: "Studied traditional Kenyan rhythms"
+      fact: "Studied traditional Kenyan rhythms",
+      photo: kodong9
     }
   ];
 
@@ -72,38 +94,48 @@ const About = () => {
         </div>
 
         {/* Members Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-16">
+       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-16">
           {members.map((member, index) => (
             <div
               key={member.name}
-              className="member-card group cursor-pointer h-80"
+              className="member-card group cursor-pointer h-96 bg-card rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
               onMouseEnter={() => setHoveredMember(index)}
               onMouseLeave={() => setHoveredMember(null)}
-              style={{ animationDelay: `${index * 0.1}s` }}
             >
-              {/* Member Image Placeholder */}
-              <div className="w-full h-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center relative">
-                <div className="text-6xl text-primary/40">
-                  <Music />
+              <div className="relative w-full h-full p-6 flex flex-col items-center">
+                {/* Member Photo */}
+                <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-primary/20 shadow-lg mb-6 group-hover:border-primary/50 transition-all duration-300">
+                  <img
+                    src={member.photo}
+                    alt={member.name}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 
-                {/* Member Info Overlay */}
-                <div className="member-card-overlay">
-                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                    <h3 className="font-display font-bold text-xl mb-2">{member.name}</h3>
-                    <p className="font-body text-primary-glow mb-2">{member.role}</p>
-                    <p className="font-body text-sm mb-3">{member.bio}</p>
-                    <div className="flex items-center gap-2 text-xs">
-                      <Star className="w-3 h-3" />
-                      <span>{member.fact}</span>
-                    </div>
+                {/* Member Info */}
+                <div className="text-center flex-1 flex flex-col">
+                  <h3 className="font-display font-bold text-2xl text-foreground mb-1">
+                    {member.name}
+                  </h3>
+                  <p className="text-primary-glow font-medium mb-3">
+                    {member.role}
+                  </p>
+                  <p className="text-muted-foreground text-sm mb-4 line-clamp-3 flex-1">
+                    {member.bio}
+                  </p>
+                  <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground mt-auto">
+                    <Star className="w-4 h-4 text-yellow-400" />
+                    <span>{member.fact}</span>
                   </div>
                 </div>
-
-                {/* Floating Specialty Badge */}
-                <div className="absolute top-4 right-4 bg-primary/90 text-primary-foreground px-3 py-1 rounded-full text-xs font-medium">
+                {/* Specialty Badge */}
+                <div className="absolute top-4 right-4 bg-primary/90 text-primary-foreground px-3 py-1 rounded-full text-xs font-medium shadow-md">
                   {member.specialty}
                 </div>
+                {/* Icon */}
+                {/* <div className="absolute top-4 left-4 text-primary/80">
+                  {member.icon}
+                </div> */}
               </div>
             </div>
           ))}
